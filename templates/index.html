@@ -1,0 +1,52 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Epidemic Lab | SIR Simulator</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+  <main class="shell">
+    <header>
+      <div class="eyebrow">INTERACTIVE MATHEMATICAL MODEL</div>
+      <h1>Epidemic Lab</h1>
+      <p>Explore how transmission, recovery, vaccination, and interventions shape an outbreak.</p>
+    </header>
+    <section class="layout">
+      <aside class="panel controls">
+        <h2>Choose your scenario</h2>
+        <label>Population <input id="population" type="number" min="100" max="10000000" value="100000"></label>
+        <label>Initially infected <input id="initial_infected" type="number" min="1" value="10"></label>
+        <label>Transmission rate (β) <span class="range"><input id="beta" type="range" min="0.05" max="0.8" step="0.01" value="0.30"><output>0.30</output></span></label>
+        <label>Recovery rate (γ) <span class="range"><input id="gamma" type="range" min="0.03" max="0.5" step="0.01" value="0.10"><output>0.10</output></span></label>
+        <label>Vaccinated at start <span class="range"><input id="vaccination" type="range" min="0" max="0.9" step="0.01" value="0"><output>0%</output></span></label>
+        <label>Intervention starts on day <input id="intervention_day" type="number" min="0" max="364" value="45"></label>
+        <label>Transmission reduction <span class="range"><input id="intervention_strength" type="range" min="0" max="0.9" step="0.01" value="0.40"><output>40%</output></span></label>
+        <label>Simulation length <span class="range"><input id="days" type="range" min="30" max="365" step="1" value="180"><output>180 days</output></span></label>
+        <button id="run">Run simulation</button>
+        <p class="hint">β and γ are rates per day. The intervention reduces β from the chosen day onward.</p>
+      </aside>
+      <section class="results">
+        <div class="metrics" id="metrics"></div>
+        <div class="panel chart-panel">
+          <div class="chart-heading"><div><h2>Outbreak over time</h2><p>Daily number of people in each group</p></div><div class="legend"><span><i class="blue"></i>Susceptible</span><span><i class="orange"></i>Infected</span><span><i class="green"></i>Recovered</span></div></div>
+          <canvas id="chart" aria-label="SIR simulation chart"></canvas>
+        </div>
+        <div class="panel map-panel">
+          <div class="chart-heading"><div><h2>Regional spread map</h2><p>A schematic 6 × 6 grid; each cell is one region</p></div><div class="map-options">
+            <label>First infected region <select id="seed_region"><option value="0">Northwest</option><option value="14" selected>Center</option><option value="35">Southeast</option></select></label>
+            <label>Between-region spread <span class="range"><input id="mobility" type="range" min="0" max="0.5" step="0.01" value="0.12"><output>12%</output></span></label>
+          </div></div>
+          <div id="map-grid" class="map-grid" role="img" aria-label="Regional map colored by infected population"></div>
+          <div class="map-controls"><button id="play-map" type="button">▶ Play spread</button><label>Day <input id="map-day" type="range" min="0" max="180" value="0"><output id="map-day-value">0</output></label><span id="map-legend"><i></i> More infected</span></div>
+          <p class="hint">Each region has its own SIR model. The mobility setting controls how strongly infection in neighboring regions contributes to local spread. This is a schematic grid, not a real geographic map.</p>
+        </div>
+        <div class="panel explanation"><h2>What the model says</h2><p id="summary">Run a simulation to see how your choices change the outbreak.</p><div class="equations">dS/dt = −βSI/N &nbsp; · &nbsp; dI/dt = βSI/N − γI &nbsp; · &nbsp; dR/dt = γI</div></div>
+      </section>
+    </section>
+    <footer>Educational simulation only. Real outbreaks involve factors this simple SIR model does not represent.</footer>
+  </main>
+  <script src="{{ url_for('static', filename='app.js') }}"></script>
+</body>
+</html>
