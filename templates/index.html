@@ -34,8 +34,20 @@
           <canvas id="chart" aria-label="SIR simulation chart"></canvas>
         </div>
         <div class="panel map-panel">
-          <div class="chart-heading"><div><h2>Regional spread map</h2><p>A schematic 6 × 6 grid; each cell is one region</p></div><div class="map-options">
-            <label>First infected region <select id="seed_region"><option value="0">Northwest</option><option value="14" selected>Center</option><option value="35">Southeast</option></select></label>
+          <div class="chart-heading">
+  <div>
+    <h2>Regional spread map</h2>
+    <p>A schematic 12 × 12 grid; each cell is one region</p>
+  </div>
+  <div class="map-options">
+    <label>
+      First infected region
+      <select id="seed_region">
+        <option value="0">Northwest</option>
+        <option value="78" selected>Center</option>
+        <option value="143">Southeast</option>
+      </select>
+    </label>
             <label>Between-region spread <span class="range"><input id="mobility" type="range" min="0" max="0.5" step="0.01" value="0.12"><output>12%</output></span></label>
           </div></div>
           <div id="map-grid" class="map-grid" role="img" aria-label="Regional map colored by infected population"></div>

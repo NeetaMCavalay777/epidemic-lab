@@ -7,11 +7,39 @@ document.querySelectorAll('input[type="range"]').forEach(input => input.addEvent
 }));
 byId('mobility').addEventListener('input', e => e.target.parentElement.querySelector('output').value = `${Math.round(e.target.value * 100)}%`);
 function values(){ return Object.fromEntries(ids.map(id => [id, Number(byId(id).value)])); }
-function paintMap(day){
-  if(!mapData)return;
-  const index=Math.max(0,Math.min(Number(day),mapData.days.length-1)), counts=mapData.grid[index], maximum=Math.max(1,...counts);
-  byId('map-day').value=index;byId('map-day-value').value=index;
-  byId('map-grid').innerHTML=counts.map((count,cell)=>{const intensity=Math.log1p(count)/Math.log1p(maximum);const light=96-intensity*43;return `<div class="region-cell${cell===mapData.seed_region?' seed':''}" style="background:hsl(22 78% ${light}%)" aria-label="Region ${cell+1}: ${count.toLocaleString()} infected"><span>R${cell+1}</span><strong>${count.toLocaleString()}</strong></div>`}).join('');
+function paintMap(day) {
+  if (!mapData) return;
+
+  const index = Math.max(0, Math.min(Number(day), mapData.days.length - 1));
+  const counts = mapData.grid[index];
+  const maximum = Math.max(1, ...counts);
+
+  byId('map-day').value = index;
+  byId('map-day-value').value = index;
+
+  const grid = byId('map-grid');
+  grid.style.gridTemplateColumns = `repeat(${mapData.cols}, minmax(0, 1fr))`;
+
+  const compact = new Intl.NumberFormat(undefined, {
+    notation: 'compact',
+    maximumFractionDigits: 1
+  });
+
+  grid.innerHTML = counts.map((count, cell) => {
+    const intensity = Math.log1p(count) / Math.log1p(maximum);
+    const light = 96 - intensity * 43;
+
+    return `
+      <div
+        class="region-cell${cell === mapData.seed_region ? ' seed' : ''}"
+        style="background: hsl(22 78% ${light}%)"
+        aria-label="Region ${cell + 1}: ${count.toLocaleString()} infected"
+        title="Region ${cell + 1}: ${count.toLocaleString()} infected"
+      >
+        <strong>${compact.format(count)}</strong>
+      </div>
+    `;
+  }).join('');
 }
 async function runMap(){
   const params={...values(),mobility:Number(byId('mobility').value),seed_region:Number(byId('seed_region').value)};
